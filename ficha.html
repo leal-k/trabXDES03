@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sistema Interativo de Fichas RPG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+  <div class="container">
+    <h1>🎲 Fichas de RPG</h1>
+    <div class="form-toggle">
+      <button id="login-btn" class="active">Login</button>
+      <button id="register-btn">Cadastrar</button>
+    </div>
+    <form id="auth-form">
+      <input type="text" id="name-field" placeholder="Nome" style="display: none;" />
+      <input type="email" placeholder="Email" required/>
+      <input type="password" placeholder="Senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const nameField = document.getElementById('name-field');
+    const form = document.getElementById('auth-form');
+
+    loginBtn.addEventListener('click', () => {
+      nameField.style.display = 'none';
+      loginBtn.classList.add('active');
+      registerBtn.classList.remove('active');
+    });
+
+    registerBtn.addEventListener('click', () => {
+      nameField.style.display = 'block';
+      registerBtn.classList.add('active');
+      loginBtn.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
