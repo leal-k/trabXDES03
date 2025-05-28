@@ -152,3 +152,97 @@ body {
     color: #000;
   }
   
+/* ----------------------------CSS Hub---------------------------- */
+
+.hub-container {
+    padding: 2rem;
+    color: #fff;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .grid-fichas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .ficha-card {
+    background-color: #1a1a1a;
+    border: 2px solid #333;
+    padding: 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* .ficha-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(240, 238, 238, 0.4);
+  } */
+
+  .ficha-dnd {
+    border-left: 6px solid #ff3c00;
+    background: linear-gradient(to bottom, #2c1a0c, #1b0f07);
+    color: #ff3c00;
+    text-shadow: 0 0 5px #ff3c00;
+  }
+
+  .ficha-dnd:hover {
+    box-shadow: 0 0 15px #ff3c00, 0 0 30px #ff3c00;
+    transform: scale(1.02);
+  }
+
+  .ficha-cyberpunk {
+    border-left: 6px solid #00ffff; /* ciano neon */
+    background: linear-gradient(to bottom, #0a0a0a, #111122);
+    color: #00ffff;
+    font-family: 'Orbitron', sans-serif; /* Uma fonte futurista */
+    text-shadow: 0 0 5px #00ffff;
+  }
+
+  .ficha-cyberpunk:hover {
+    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+    transform: scale(1.02);
+  }
+
+  .ficha-cthulhu {
+    border-left: 6px solid #a85fff;
+    background: linear-gradient(to bottom, #1b0e25, #2e0a3b);
+    color: #a85fff;
+    text-shadow: 0 0 5px #a85fff;
+  }
+
+  .ficha-cthulhu:hover {
+    box-shadow: 0 0 15px #a85fff, 0 0 30px #a85fff;
+    transform: scale(1.02);
+  }
+
+  .ficha-vampiro {
+    border-left: 6px solid #6e004d;
+    background: linear-gradient(to bottom, #1a0a0a, #2c0f1c);
+    color: #6e004d;
+    text-shadow: 0 0 5px #6e004d;
+  }
+
+  .ficha-vampiro:hover {
+    box-shadow: 0 0 15px #6e004d, 0 0 30px #6e004d;
+    transform: scale(1.02);
+  }
+  
+  .ficha-nova {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ccc;
+    background: #111;
+    border: 2px dashed #555;
+  }
+  
+  .ficha-nova:hover {
+    border-color: white;
+    color: white;
+  }
