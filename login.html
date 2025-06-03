@@ -31,13 +31,14 @@
 
         <form id="login-form" action="hub.html">    
         <input type="text" id="nome" placeholder="Nome" style="display: none;" />
-        <input type="email" placeholder="Email" required/>
-        <input type="password" placeholder="Senha" required />
-        <button type="submit">Entrar</button>
+        <input type="email" id="email" placeholder="Email"/> <!-- Tirei o required daqui para termos um alerta geral de campos não preenchidos -->
+        <input type="password" id="senha" placeholder="Senha"/> <!-- Idem -->
+        <input type="password" id="confirmar-senha" placeholder="Confirmar Senha" style="display: none;" />
+        <button type="submit" id="botao-submit">Entrar</button>
         </form>
     </div>
 
-    <script>
+    <!-- <script>
         const botaoLogin = document.getElementById('login-button');
         const botaoRegistro = document.getElementById('register-button');
         const campoNome = document.getElementById('nome');
@@ -54,7 +55,8 @@
         botaoRegistro.classList.add('active');
         botaoLogin.classList.remove('active');
         });
-    </script>
+    </script> -->
+    <script src="autenticador.js"></script>
 </body>
 <!-- <footer>
     <p>Feito com &heartsuit; por <a href="https://github.com/leal-k/trabXDES03">Nyarlathotep</a></p>
