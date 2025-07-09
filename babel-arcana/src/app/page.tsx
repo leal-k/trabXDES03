@@ -8,10 +8,10 @@ import CardIni from "@/componentes/textbox-index/card-ini";
 export default function Home() {
   return (
     <main>
-      <div className="relative w-[1920px] h-[800px]">
+      <div className="relative w-[100%] h-[80vh]">
         <Image
           className="bg-white dark:bg-black object-cover"
-          src="/fundo2teste.jpg"
+          src="/livro-inicio.png"
           alt="Imagem de fundo de teste"
           fill
           priority

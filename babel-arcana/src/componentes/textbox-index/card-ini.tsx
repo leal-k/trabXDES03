@@ -5,7 +5,12 @@ import styles from '../../app/styles/glass-card.module.css';
 export default function CardIni() {
   return (
     <div className={styles.glassCard}>
-      <h1 className="text-2xl font-bold mb-4">Babel Arcana</h1>
+      <h1
+        className="text-2xl font-bold mb-4 "
+        style={{ fontFamily: "'Cinzel-Bold', serif" }}
+      >
+        Babel Arcana
+      </h1>
       <p className="text-lg mb-6">Bem vindo ao nosso armazém de fichas!</p>
       <div className="flex flex-col gap-4 w-full max-w-xs">
         <Link
