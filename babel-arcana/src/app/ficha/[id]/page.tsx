@@ -20,12 +20,19 @@ interface FichaDetalhes {
 }
 
 export default function FichaPage() {
+  
   const [ficha, setFicha] = useState<FichaDetalhes | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const router = useRouter();
   const params = useParams();
   const fichaId = params.id as string;
+
+  // Estado que vai guardar as opções de raça vindas da API
+  const [opcoesRacas, setOpcoesRacas] = useState<{index: string; name: string }[]>([]);
+
+  // Estado que vai guardar as opções de classe vindas da API
+  const [opcoesClasses, setOpcoesClasses] = useState<{index: string; name: string }[]>([]);
 
   useEffect(() => {
     // Verifica se o usuário está logado
@@ -67,6 +74,34 @@ export default function FichaPage() {
     fetchData();
   }, [fichaId, router]);
 
+  useEffect(() => {
+    const buscarRacas = async () => {
+      try{
+        const resposta = await fetch('https://www.dnd5eapi.co/api/races');
+        const dados = await resposta.json();
+        setOpcoesRacas(dados.results); // results é um array JSON de retorno com índice e nome
+      }catch(erro){
+        console.error('Erro ao buscar raças:', erro);
+      }
+    };
+
+    buscarRacas();
+  }, []);
+
+  useEffect(() => {
+    const buscarClasse = async () => {
+      try{
+        const resposta = await fetch('https://www.dnd5eapi.co/api/classes');
+        const dados = await resposta.json();
+        setOpcoesClasses(dados.results); // results é um array JSON de retorno com índice e nome
+      }catch(erro){
+        console.error('Erro ao buscar classes:', erro);
+      }
+    };
+
+    buscarClasse();
+  }, []);
+
   const fetchFichaData = async (id: string) => {
     try {
       // Dados mockados - substitua pela API real
@@ -76,8 +111,8 @@ export default function FichaPage() {
           nome: 'D&D - Teste',
           sistema: 'dnd',
           nivel: 5,
-          classe: 'Maga',
-          raca: 'Elfa',
+          classe: 'wizard', // Só porque fiz a chamada da API com índice (caso precisasse pegar outra informação depois) ao invés de nome
+          raca: 'elf', // Mesma coisa aqui
           atributos: {
             forca: 8,
             destreza: 14,
@@ -332,27 +367,43 @@ export default function FichaPage() {
                   <div>
                     <label className="block text-gray-300 mb-1">Classe:</label>
                     {editMode ? (
-                      <input
-                        type="text"
+                      <select
                         value={ficha.classe || ''}
                         onChange={(e) => updateFicha('classe', e.target.value)}
                         className="w-full bg-white/10 text-white px-3 py-2 rounded border border-gray-600 outline-none"
-                      />
+                      >
+                        <option value="">Selecione uma classe</option>
+                        {opcoesClasses.map((classe) => (
+                          <option key={classe.index} value={classe.index}>
+                            {classe.name}
+                          </option>
+                        ))}
+                      </select>
                     ) : (
-                      <p className="text-white">{ficha.classe}</p>
+                      <p className="text-white">
+                        {opcoesClasses.find(c => c.index === ficha.classe)?.name || ficha.classe}
+                      </p>
                     )}
                   </div>
                   <div>
                     <label className="block text-gray-300 mb-1">Raça:</label>
                     {editMode ? (
-                      <input
-                        type="text"
+                      <select
                         value={ficha.raca || ''}
                         onChange={(e) => updateFicha('raca', e.target.value)}
                         className="w-full bg-white/10 text-white px-3 py-2 rounded border border-gray-600 outline-none"
-                      />
+                      >
+                        <option value="">Selecione uma raça</option>
+                        {opcoesRacas.map((raca) => (
+                          <option key={raca.index} value={raca.index}>
+                            {raca.name}
+                          </option>
+                        ))}
+                      </select>
                     ) : (
-                      <p className="text-white">{ficha.raca}</p>
+                      <p className="text-white">
+                      {opcoesRacas.find(r => r.index === ficha.raca)?.name || ficha.raca}
+                    </p>
                     )}
                   </div>
                 </>

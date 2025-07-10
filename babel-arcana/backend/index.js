@@ -124,7 +124,7 @@ app.use('/api/fichas', fichasRouter);
 
 // Inicia o servidor
 app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+    console.log('Servidor rodando na porta 3000'); // Mudei a porta de 3000 para 5000 porque 3000 é a padrão do front no next
 });
 
 // Biblioteca 'jsonwebtoken' (JWT):
