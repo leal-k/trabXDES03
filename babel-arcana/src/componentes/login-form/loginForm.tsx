@@ -42,7 +42,7 @@ export default function LoginForm() {
     setFormData(prev => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.email || !formData.senha) {
@@ -61,16 +61,46 @@ export default function LoginForm() {
       }
     }
 
-    // Mock login/register logic
-    const userData = {
-      id: '1',
-      nome: formData.nome || 'Usuário Teste',
-      email: formData.email
-    };
-    const token = 'mock-token-' + Date.now();
-    
-    login(token, userData);
-    router.push('/hub');
+    try {
+      const url = isRegister ? '/api/cadastro' : '/api/login';
+      const body = isRegister 
+        ? { nome: formData.nome, email: formData.email, senha: formData.senha, confirmarSenha: formData.confirmarSenha }
+        : { email: formData.email, senha: formData.senha };
+
+      const response = await fetch(`http://localhost:3000${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (isRegister) {
+          alert('Usuário cadastrado com sucesso!');
+          // Limpar formulário
+          setFormData({ nome: '', email: '', senha: '', confirmarSenha: '' });
+          // Redirecionar para login
+          handleToggleMode(false);
+        } else {
+          // Login bem-sucedido
+          const userData = {
+            id: '1', // Você pode melhorar isso retornando dados do usuário da API
+            nome: formData.nome || 'Usuário',
+            email: formData.email
+          };
+          login(data.token, userData);
+          router.push('/hub');
+        }
+      } else {
+        alert('Erro: ' + data.mensagem);
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      alert('Erro de conexão com o servidor');
+    }
   };
 
   const formOrder = isRegister ? styles.order1 : styles.order2;

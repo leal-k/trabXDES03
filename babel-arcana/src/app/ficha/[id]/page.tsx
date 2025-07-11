@@ -105,51 +105,36 @@ export default function FichaPage() {
 
   const fetchFichaData = async (id: string) => {
     try {
-      // Dados mockados - substitua pela API real
-      const fichasMock: { [key: string]: FichaDetalhes } = {
-        '1': {
-          id: '1',
-          nome: 'D&D - Teste',
-          sistema: 'dnd',
-          nivel: 5,
-          classe: 'wizard', // Só porque fiz a chamada da API com índice (caso precisasse pegar outra informação depois) ao invés de nome
-          raca: 'elf', // Mesma coisa aqui
-          atributos: {
-            forca: 8,
-            destreza: 14,
-            constituicao: 12,
-            inteligencia: 16,
-            sabedoria: 13,
-            carisma: 11
-          },
-          habilidades: ['Bola de Fogo', 'Mísseis Mágicos', 'Escudo']
-        },
-        '2': {
-          id: '2',
-          nome: 'Cyberpunk - Teste',
-          sistema: 'cyberpunk',
-          classe: 'Netrunner',
-          atributos: {
-            tech: 8,
-            reflexos: 6,
-            legal: 4,
-            corpo: 5,
-            inteligencia: 9,
-            presenca: 6
-          },
-          habilidades: ['Hacking', 'Programação', 'Eletrônica']
-        }
-      };
-
-      const fichaData = fichasMock[id];
-      if (fichaData) {
-        setFicha(fichaData);
-      } else {
-        alert('Ficha não encontrada.');
-        router.push('/hub');
-      }
+      const token = localStorage.getItem('token');
       
+      if (!token) {
+        alert('Token não encontrado. Faça login novamente.');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3000/api/fichas/${id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          alert('Ficha não encontrada.');
+        } else {
+          alert('Erro ao carregar ficha.');
+        }
+        router.push('/hub');
+        return;
+      }
+
+      const fichaData = await response.json();
+      setFicha(fichaData);
       setLoading(false);
+      
     } catch (error) {
       console.error('Erro ao buscar ficha:', error);
       alert('Erro ao carregar ficha.');
@@ -161,39 +146,57 @@ export default function FichaPage() {
     if (!ficha) return;
 
     try {
-      // TODO: Implementar salvamento real
-      console.log('Salvando ficha:', ficha);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert('Token não encontrado. Faça login novamente.');
+        router.push('/login');
+        return;
+      }
+
+      const url = fichaId === 'nova' 
+        ? 'http://localhost:3000/api/fichas' 
+        : `http://localhost:3000/api/fichas/${fichaId}`;
+      
+      const method = fichaId === 'nova' ? 'POST' : 'PUT';
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nome: ficha.nome,
+          classe: ficha.classe,
+          nivel: ficha.nivel,
+          raca: ficha.raca
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.mensagem || 'Erro ao salvar ficha');
+      }
+
+      const savedFicha = await response.json();
       
       if (fichaId === 'nova') {
         alert('Nova ficha criada com sucesso!');
         router.push('/hub');
       } else {
         alert('Ficha salva com sucesso!');
+        setFicha(savedFicha);
         setEditMode(false);
       }
-
-      /* 
-      // Implementação real da API:
-      const response = await fetch(`/api/fichas/${fichaId === 'nova' ? '' : fichaId}`, {
-        method: fichaId === 'nova' ? 'POST' : 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(ficha)
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao salvar ficha.');
-      }
-
-      const data = await response.json();
-      setFicha(data);
-      setEditMode(false);
-      */
+      
     } catch (error) {
       console.error('Erro ao salvar ficha:', error);
-      alert('Erro ao salvar ficha.');
+      if (error instanceof Error) {
+        alert('Erro ao salvar ficha: ' + error.message);
+      } else {
+        alert('Erro ao salvar ficha: ' + String(error));
+      }
     }
   };
 
@@ -202,25 +205,28 @@ export default function FichaPage() {
 
     if (confirm('Tem certeza que deseja excluir esta ficha?')) {
       try {
-        // TODO: Implementar exclusão real
-        alert('Ficha excluída com sucesso!');
-        router.push('/hub');
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          alert('Token não encontrado. Faça login novamente.');
+          router.push('/login');
+          return;
+        }
 
-        /* 
-        // Implementação real da API:
-        const response = await fetch(`/api/fichas/${fichaId}`, {
+        const response = await fetch(`http://localhost:3000/api/fichas/${fichaId}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
 
         if (!response.ok) {
-          throw new Error('Erro ao excluir ficha.');
+          throw new Error('Erro ao excluir ficha');
         }
 
+        alert('Ficha excluída com sucesso!');
         router.push('/hub');
-        */
+        
       } catch (error) {
         console.error('Erro ao excluir ficha:', error);
         alert('Erro ao excluir ficha.');

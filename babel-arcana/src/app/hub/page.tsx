@@ -30,36 +30,37 @@ export default function HubPage() {
 
   const fetchUserFichas = async () => {
     try {
-      // Dados mockados - substitua pela API real
-      setFichas([
-        {
-          id: '1',
-          nome: 'D&D - Teste',
-          sistema: 'dnd',
-          nivel: '5',
-          classe: 'Maga'
-        },
-        {
-          id: '2',
-          nome: 'Cyberpunk - Teste',
-          sistema: 'cyberpunk',
-          classe: 'Netrunner'
-        },
-        {
-          id: '3',
-          nome: 'Call of Cthulhu - Teste',
-          sistema: 'cthulhu',
-          sanidade: '47%'
-        },
-        {
-          id: '4',
-          nome: 'Vampiro - Teste',
-          sistema: 'vampiro',
-          cla: 'Toreador'
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert('Token não encontrado. Faça login novamente.');
+        logout();
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/api/fichas', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      ]);
+      });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          alert('Sessão expirada. Faça login novamente.');
+          logout();
+          return;
+        }
+        throw new Error('Erro ao buscar fichas');
+      }
+
+      const fichasData = await response.json();
+      setFichas(fichasData);
+      
     } catch (error) {
       console.error('Erro ao buscar fichas:', error);
+      alert('Erro ao carregar suas fichas');
     }
   };
 
